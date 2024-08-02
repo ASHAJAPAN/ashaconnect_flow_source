@@ -23,11 +23,14 @@
             explanation: '',
             inputs: [
                 {
-                    cap: 'First name'
+                    cap: 'First name',
+                    dataname: ['basic', 'name', 'first']
                 }, {
-                    cap: 'Middle name'
+                    cap: 'Middle name',
+                    dataname: ['basic', 'name', 'middle']
                 }, {
-                    cap: 'Family name'
+                    cap: 'Family name',
+                    dataname: ['basic', 'name', 'last']
                 }
             ],
             next: 'B2'
@@ -42,27 +45,27 @@
             type: "DateInputOptional",
             msg: 'Tell me your birthday.',
             explanation: 'You can skip this question if you do not know.',
-            nexts: [5, 4]
+            nexts: ['B5', 'B4']
         }, {
-            id: 4,
+            id: 'B4',
             type: "TextInputOptional",
             msg: 'Tell me your age.',
             explanation: 'You can skip this question if you do not know.',
-            nexts: [5, 5]
+            nexts: ['B5', 'B5']
         }, {
-            id: 5,
+            id: 'B5',
             type: "TextInput",
             msg: 'Input the ward number.',
             explanation:'',
-            next: 6
+            next: 'B6'
         }, {
-            id: 6,
+            id: 'B6',
             type: "TextInputOptional",
             msg: 'Tell me your HealthConnect ID. ',
             explanation:'You can skip this question if you do not have.',
-            nexts: [20, 20]
+            nexts: ['MB1', 'MB1']
         }, {
-            id: 20,
+            id: 'MB1',
             type: "TextInputOptional",
             msg: 'Tell me your height by cm. ',
             explanation:'You can skip this question if you do not know.',
@@ -328,15 +331,31 @@
             msg: '[To CHW] is the patient pregnant or mother of newborn baby?',
             explanation: '',
             nexts: [{
-                id: 'ANC1',
+                id: 'ANC0',
                 cap: 'Pregnant'
             }, {
                 id: 'PNC1',
                 cap: 'Mother of newborn baby'
             }, {
-                id: 'NCD1',
+                id: 'NCD0',
                 cap: 'No'
             }]
+        }, {
+            id: 'ANC0',
+            type: "Branch",
+            condition: 10
+        }, {
+            id: 'ANC1',
+            type: "YesNo",
+            msg: 'Has the blood test and urine test been completed?',
+            explanation:'',
+            nexts: ['ANC2', 'ANC11']
+        }, {
+            id: 'ANC101',
+            type: "YesNo",
+            msg: 'Was your labor pain onset?',
+            explanation:'',
+            nexts: ['ANC2', 'ANC11']
         }, {
             id: 'F1',
             type: "YesNo",

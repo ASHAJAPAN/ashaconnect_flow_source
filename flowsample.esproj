@@ -9,7 +9,6 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="electron\" />
     <Folder Include="src\components\icons\" />
   </ItemGroup>
 </Project>

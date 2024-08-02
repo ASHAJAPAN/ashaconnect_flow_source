@@ -9,9 +9,9 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig({
     plugins: [
         vue(),
-        electron({
-            entry: 'electron/main.js', // メインプロセスのエントリーポイント
-        })
+        //electron({
+        //    entry: 'electron/main.js', // メインプロセスのエントリーポイント
+        //})
     ],
     build: {
         rollupOptions: {

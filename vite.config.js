@@ -8,15 +8,16 @@ import { fileURLToPath, URL } from 'node:url'
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [
-        vue(),
+        vue()
         //electron({
         //    entry: 'electron/main.js', // メインプロセスのエントリーポイント
         //})
     ],
+    base: '/ashaconnect_flow/',
     build: {
         rollupOptions: {
             // アプリケーションのエントリーポイントを指定
-            input: 'src/main.js'
+            input: 'index.html'
         }
     },
     resolve: {

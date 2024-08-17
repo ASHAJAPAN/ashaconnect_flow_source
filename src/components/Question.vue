@@ -231,52 +231,52 @@
                 explanation: '',
                 nexts: ['MB14', 'MB14', 'MB14'],
                 dataname: ['medical_basic', 'medical_history', 'type1_diabetes']
+            },
+
+            {
+                id: 'MB14',
+                type: "YesNoUnknown",
+                msg: 'Have you ever been diagnosed with type2 Diabetes?',
+                explanation: '',
+                nexts: ['MB15', 'MB15', 'MB15'],
+                dataname: ['medical_basic', 'medical_history', 'type2_diabetes']
+            },
+
+            {
+                id: 'MB15',
+                type: "YesNoUnknown",
+                msg: 'Have you ever been diagnosed with systemic autoimmune disease?',
+                explanation: 'e.g. Systemic Lupus Erythematosus (SLE), rheumatoid arthritis',
+                nexts: ['MB16', 'MB16', 'MB16'],
+                dataname: ['medical_basic', 'medical_history', 'systemic_autoimmune_disease']
+            },
+
+            {
+                id: 'MB16',
+                type: "YesNoUnknown",
+                msg: 'Have you ever been diagnosed with haemoglobinopathies: sickle cell anaemia, thalassaemias?',
+                explanation: '',
+                nexts: ['MB17', 'MB17', 'MB17'],
+                dataname: ['medical_basic', 'medical_history', 'haemoglobinopathies']
+            },
+
+            {
+                id: 'MB17',
+                type: "YesNoUnknown",
+                msg: 'Have you ever been diagnosed with endocrine disorder, such as thyroid function?',
+                explanation: '',
+                nexts: ['MB18', 'MB18', 'MB18'],
+                dataname: ['medical_basic', 'medical_history', 'thyroid_function']
+            },
+
+            {
+                id: 'MB18',
+                type: "YesNoUnknown",
+                msg: 'Have you ever been diagnosed with kidney or liver diseases?',
+                explanation: '',
+                nexts: ['MB19', 'MB19', 'MB19'],
+                dataname: ['medical_basic', 'medical_history', 'liver_diseases']
             }, 
-        
-        {
-            id: 'MB14',
-            type: "YesNoUnknown",
-            msg: 'Have you ever been diagnosed with type2 Diabetes?',
-            explanation:'',
-            nexts: ['MB15', 'MB15', 'MB15'],
-            dataname: ['medical_basic', 'medical_history' ,'type2_diabetes']
-        }, 
-        
-        {
-            id: 'MB15',
-            type: "YesNoUnknown",
-            msg: 'Have you ever been diagnosed with systemic autoimmune disease?',
-            explanation:'e.g. Systemic Lupus Erythematosus (SLE), rheumatoid arthritis',
-            nexts: ['MB16', 'MB16', 'MB16'],
-            dataname: ['medical_basic', 'medical_history' ,'systemic_autoimmune_disease']
-        }, 
-        
-        {
-            id: 'MB16',
-            type: "YesNoUnknown",
-            msg: 'Have you ever been diagnosed with haemoglobinopathies: sickle cell anaemia, thalassaemias?',
-            explanation:'',
-            nexts: ['MB17', 'MB17', 'MB17'],
-            dataname: ['medical_basic', 'medical_history' ,'haemoglobinopathies']
-        }, 
-        
-        {
-            id: 'MB17',
-            type: "YesNoUnknown",
-            msg: 'Have you ever been diagnosed with endocrine disorder, such as thyroid function?',
-            explanation:'',
-            nexts: ['MB18', 'MB18', 'MB18'],
-            dataname: ['medical_basic', 'medical_history','thyroid_function']
-        }, 
-        
-        {
-            id: 'MB18',
-            type: "YesNoUnknown",
-            msg: 'Have you ever been diagnosed with kidney or liver diseases?',
-            explanation:'',
-            nexts: ['MB19', 'MB19', 'MB19'],
-            dataname: ['medical_basic', 'medical_history', 'liver_diseases']
-        }, 
 
             {
                 id: 'MB19',
@@ -616,112 +616,112 @@
                 msg: 'Have you decided where to give birth?',
                 explanation:'',
                 nexts: ['ANCBasic3', 'ANCBasic2']
-            }, 
-        
-        {
-            id: 'ANCBasic2',
-            type: "Message",
-            msg: 'Tell her to decide the birth facility.',
-            explanation:'',
-            next: 'ANCBasic3'
-        }, 
-        
-        {
-            id: 'ANCBasic3',
-            type: "Selection",
-            msg: 'Where are you planning to give birth?',
-            explanation:'',
-            nexts: [
-                {
-                    id: 'ANCBasic5',
-                    cap: 'Home'
-                }, {
-                    id: 'ANCBasic4',
-                    cap: 'Health Post'
-                }, {
-                    id: 'ANCBasic4',
-                    cap: 'Government Elsewhere'
-                }, {
-                    id: 'ANCBasic4',
-                    cap: 'Community Health Unit / Basic Health Unit'
-                }, {
-                    id: 'ANCBasic4',
-                    cap: 'Birth Center'
-                }, {
-                    id: 'ANCBasic4',
-                    cap: 'Antenatal Care Center'
-                }, {
-                    id: 'ANCBasic4',
-                    cap: 'Ayurveda Clinic'
-                }, {
-                    id: 'ANCBasic4',
-                    cap: 'Private center within the municipality'
-                }, {
-                    id: 'ANCBasic4',
-                    cap: 'Private center outside the municipality'
-                }, {
-                    id: 'ANCBasic4',
-                    cap: 'India'
-                }, {
-                    id: 'ANCBasic4',
-                    cap: 'Other'
-                }
-            ],
-            dataname: ['ANC', 'BirthFacilityType']
-        }, 
-        
-        {
-            id: 'ANCBasic4',
-            type: "TextInput",
-            msg: 'Tell me the name of birth facility.',
-            explanation:'',
-            dataname: ['ANC', 'BirthFacilityName'],
-            next: 'ANCBasic11'
-        }, 
-        
-        {
-            id: 'ANCBasic11',
-            type: "DateInput",
-            msg: 'Tell me your first day of the last menstrual period.',
-            explanation:'',
-            dataname: ['ANC', 'LMP'],
-            next: 'ANCBasic12'
-        },
-        
-        {
-            id: 'ANCBasic12',
-            type: "YesNo",
-            msg: 'Have you ever been told when your estimated delivery date is?',
-            explanation:'',
-            nexts: ['ANCBasic13', 'ANC10']
-        }, 
-        
-        {
-            id: 'ANCBasic13',
-            type: "DateInput",
-            msg: 'Tell me your estimated delivery date.',
-            explanation:'',
-            dataname: ['ANC', 'EDD'],
-            next: 'ANCBasic14'
-        },
-        
-        {
-            id: 'ANCBasic14',
-            type: "TextInput",
-            msg: 'Tell me your weight before pregnancy.',
-            explanation:'',
-            dataname: ['ANC', 'weight_before_pregnancy'],
-            next: 'ANCBasic15'
-        }, 
-        
-        {
-            id: 'ANCBasic15',
-            type: "TextInput",
-            msg: 'Tell me your waist before pregnancy.',
-            explanation:'',
-            dataname: ['ANC', 'waist_before_pregnancy'],
-            next: 'ANC1'
-        },
+            },
+
+            {
+                id: 'ANCBasic2',
+                type: "Message",
+                msg: 'Tell her to decide the birth facility.',
+                explanation: '',
+                next: 'ANCBasic3'
+            },
+
+            {
+                id: 'ANCBasic3',
+                type: "Selection",
+                msg: 'Where are you planning to give birth?',
+                explanation: '',
+                nexts: [
+                    {
+                        id: 'ANCBasic5',
+                        cap: 'Home'
+                    }, {
+                        id: 'ANCBasic4',
+                        cap: 'Health Post'
+                    }, {
+                        id: 'ANCBasic4',
+                        cap: 'Government Elsewhere'
+                    }, {
+                        id: 'ANCBasic4',
+                        cap: 'Community Health Unit / Basic Health Unit'
+                    }, {
+                        id: 'ANCBasic4',
+                        cap: 'Birth Center'
+                    }, {
+                        id: 'ANCBasic4',
+                        cap: 'Antenatal Care Center'
+                    }, {
+                        id: 'ANCBasic4',
+                        cap: 'Ayurveda Clinic'
+                    }, {
+                        id: 'ANCBasic4',
+                        cap: 'Private center within the municipality'
+                    }, {
+                        id: 'ANCBasic4',
+                        cap: 'Private center outside the municipality'
+                    }, {
+                        id: 'ANCBasic4',
+                        cap: 'India'
+                    }, {
+                        id: 'ANCBasic4',
+                        cap: 'Other'
+                    }
+                ],
+                dataname: ['ANC', 'BirthFacilityType']
+            },
+
+            {
+                id: 'ANCBasic4',
+                type: "TextInput",
+                msg: 'Tell me the name of birth facility.',
+                explanation: '',
+                dataname: ['ANC', 'BirthFacilityName'],
+                next: 'ANCBasic11'
+            },
+
+            {
+                id: 'ANCBasic11',
+                type: "DateInput",
+                msg: 'Tell me your first day of the last menstrual period.',
+                explanation: '',
+                dataname: ['ANC', 'LMP'],
+                next: 'ANCBasic12'
+            },
+
+            {
+                id: 'ANCBasic12',
+                type: "YesNo",
+                msg: 'Have you ever been told when your estimated delivery date is?',
+                explanation: '',
+                nexts: ['ANCBasic13', 'ANC10']
+            },
+
+            {
+                id: 'ANCBasic13',
+                type: "DateInput",
+                msg: 'Tell me your estimated delivery date.',
+                explanation: '',
+                dataname: ['ANC', 'EDD'],
+                next: 'ANCBasic14'
+            },
+
+            {
+                id: 'ANCBasic14',
+                type: "TextInput",
+                msg: 'Tell me your weight before pregnancy.',
+                explanation: '',
+                dataname: ['ANC', 'weight_before_pregnancy'],
+                next: 'ANCBasic15'
+            },
+
+            {
+                id: 'ANCBasic15',
+                type: "TextInput",
+                msg: 'Tell me your waist before pregnancy.',
+                explanation: '',
+                dataname: ['ANC', 'waist_before_pregnancy'],
+                next: 'ANC1'
+            },
 
             // ******* General *******
             {
@@ -777,7 +777,7 @@
             {
                 id: 'ANC1',
                 type: "Branch",
-                condition: 'VeryHighBP',
+                condition: 'CheckUrgency',
                 nexts: ['RESULT_VERYURGENT', 'ANC2']
             },
 
@@ -1029,16 +1029,82 @@
                 condition: 'CheckUrgency',
                 nexts: ['RESULT_VERYURGENT', 'ANC_B17']
             },
-     
-     
-//            Do you feel severe fatigue ?
-//                Do you have severe edema ?
+
+            {
+                id: 'ANC_B17',
+                type: "YesNo",
+                msg: 'Do you feel severe fatigue?',
+                explanation: '',
+                nexts: ['ANC_B18', 'ANC_B18'],
+                dataname: ['ANC', 'flow', 'severe_fatigue']
+            },
+
+            {
+                id: 'ANC_B18',
+                type: "YesNo",
+                msg: 'Do you have severe edema?',
+                explanation: '',
+                nexts: ['ANC_B19', 'ANC_B19'],
+                dataname: ['ANC', 'flow', 'severe_edema']
+            },
+
+            {
+                id: 'ANC_B19',
+                type: "YesNo",
+                msg: 'Do you have nausea?',
+                explanation: '',
+                nexts: ['ANC_B20', 'ANC_B20'],
+                dataname: ['ANC', 'flow', 'nausea']
+            },
+
+            {
+                id: 'ANC_B20',
+                type: "YesNo",
+                msg: 'Have you had any episodes of vomiting?',
+                explanation: '',
+                nexts: ['ANC_B21', 'ANC_B21'],
+                dataname: ['ANC', 'flow', 'vomiting']
+            },
+
+            {
+                id: 'ANC_B21',
+                type: "YesNo",
+                msg: 'Do you have severe stomachache?',
+                explanation: '',
+                nexts: ['ANC_B22', 'ANC_B22'],
+                dataname: ['ANC', 'flow', 'severe_stomachache']
+            },
+
+            {
+                id: 'ANC_B22',
+                type: "YesNo",
+                msg: 'Do you have severe headache?',
+                explanation: '',
+                nexts: ['ANC_B23', 'ANC_B23'],
+                dataname: ['ANC', 'flow', 'severe_headache']
+            },
+
+            {
+                id: 'ANC_B23',
+                type: "Branch",
+                condition: 'CheckUrgency',
+                nexts: ['RESULT_VERYURGENT', 'ANC_B24']
+            },
+
+            {
+                id: 'ANC_B24',
+                type: "YesNo",
+                msg: 'Is there vaginal bleeding or a feeling of water breaking??',
+                explanation: '',
+                nexts: ['ANC_A6', 'ANC_A6'],
+                dataname: ['ANC', 'flow', 'vaginal_bleeding_feeling_water_breaking']
+            },
 
             {
                 id: 'ANC10',
                 type: "Branch",
                 condition: 'HighBP',
-                nexts: ['ANC11', 'ANC_A2']
+                nexts: ['ANC11', 'ANCTEST1']
             },
 
             {

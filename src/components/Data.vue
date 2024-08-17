@@ -79,6 +79,12 @@
                 persistent_abdominal_pain: null,
                 significant_vaginal_bleeding: null,
                 baby_move_well: null,
+                severe_fatigue: null,
+                severe_edema: null,
+                vomiting: null,
+                severe_stomachache: null,
+                severe_headache: null,
+                frequent_urination: null
             }
         },
         PNC: {},

@@ -1,11 +1,12 @@
-import './VeryUrgent.js'
+import { veryUrgent } from "./VeryUrgent.js";
+import { urgent } from "./Urgent.js";
 
 export function getCondition(condition_id, data) {
     switch (condition_id) {
         case 'IsAdult':
             return isAdult(data);
         case 2:
-            return isFemale(data);
+            return (data.basic.gender === 'female');
         case 'Over36weeks':
             return isOver36weeks(data);
         case 'Over32weeks':
@@ -34,6 +35,10 @@ export function getCondition(condition_id, data) {
             return isDiabetes(data);
         case 'IsHypertension':
             return isHypertension(data);
+        case 'IsANC':
+            return (data.basic.MCH === 'ANC')
+        case 'IsPNC':
+            return (data.basic.MCH === 'PNC')
         case 'VeryHighBP':
             if (data.medical_basic.SBP >= 160 || data.medical_basic.DBP >= 110)
                 return true;
@@ -50,6 +55,10 @@ export function getCondition(condition_id, data) {
             return settings.anc.blood_urine_exam;
         case 'CheckUrgency':
             return veryUrgent(data);
+        case 'CheckResultHigh':
+            return urgent(data);
+        case 'CheckResultModerate':
+            return urgent(data);
     }
 }
 
@@ -69,7 +78,7 @@ function isAdult(data) {
 }
 
 function isFemale(data) {
-    return (data.basic.gender === 'female')
+    return 
 }
 
 function isNoDisease(data) {
@@ -114,19 +123,19 @@ function isHypertension(data) {
 }
 
 function isOver36weeks(data) {
-    return (gestationalWeek() >= 36)
+    return (gestationalWeek(data) >= 36)
 }
 
 function isOver32weeks(data) {
-    return (gestationalWeek() >= 32)
+    return (gestationalWeek(data) >= 32)
 }
 
 function isOver28weeks(data) {
-    return (gestationalWeek() >= 28)
+    return (gestationalWeek(data) >= 28)
 }
 
 function isOver24weeks(data) {
-    return (gestationalWeek() >= 24)
+    return (gestationalWeek(data) >= 24)
 }
 
 function isOver20weeks(data) {
@@ -149,11 +158,13 @@ function gestationalWeek(data) {
     const today = new Date();
     if (data.ANC.EDD != null) {
         const date = new Date(data.ANC.EDD);
-        return 36;
+        const pastday = (date.getTime() - today.getTime()) / 86400000;
+        const gw = 40 - pastday / 7;
+        return gw;
     }
     else if (data.ANC.LMP != null) {
         const date = new Date(data.ANC.LMP);
-        const pastday = today.getDate() - date.getDate();
+        const pastday = today.getTime() - date.getDate();
         return pastday / 7;
     }
 }

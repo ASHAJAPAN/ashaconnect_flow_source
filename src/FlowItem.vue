@@ -110,12 +110,16 @@
             if (getCondition(find.condition, rawData))
                 find = interviewFlow.find(item => item.id === find.nexts[0]);
             else 
-                find = interviewFlow.find(item => item.id === find.nexts[0]);
+                find = interviewFlow.find(item => item.id === find.nexts[1]);
         }
         if (find.operation != null) {
+            getOperation(find.operation);
             find = interviewFlow.find(item => item.id === find.next);
         }
         current.value = find;
+        if (find.type === "Branch" || find.type === "Operation") {
+            getCurrent(find.id);
+        }
     }
 
     const current = ref(interviewFlow.find(item => item.id === 'Start'))

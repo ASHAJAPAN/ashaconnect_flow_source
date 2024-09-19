@@ -4,27 +4,89 @@
     import rawData from './components/Data.vue'
     import status from './components/Status.vue'
     import { getCondition } from './condition.js'
+    import { getIf } from './components/ifs.js'
+    import DataView from './components/DataView.vue'
+    import { veryUrgent } from "./components/VeryUrgent.js";
 
+    // Setting sample patients data
     function getOperation(operation_id) {
         switch (operation_id) {
             case 'SetANC':
                 rawData.basic.MCH = 'ANC';
+                break;
             case 'SetPNC':
                 rawData.basic.MCH = 'PNC';
+                break;
             case 'SetMiscarry':
                 rawData.basic.MCH = 'Miscarriage';
-            case 'Set5ANC_Asthma':
+                break;
+            case '5 months pregnant woman':
                 set5ANC();
-            case 'Set9ANC':
-                set5ANC();
+                break;
+            case '9 months pregnant woman':
+                set9ANC();
+                break;
+            case 'PNC':
+                setPNC();
+                break;
+            case 'Asthma':
+                setAsthma();
+                break;
+            case 'COPD':
+                setCOPD();
+                break;
+            case 'Hypertension':
+                setHypertension();
+                break;
+            case 'Diabetes':
+                setDiabetes();
+                break;
         }
     }
 
     function set5ANC() {
+        status.subcategory.ANC = 'Yes';
         rawData.basic.MCH = 'ANC';
-        rawData.ANC.EDD = '2025/1/1';
+        rawData.ANC.LMP = '2024/5/1';
+        rawData.ANC.EDD = '2025/2/1';
         rawData.basic.gender = 'female';
         rawData.basic.age = 25;
+        return true;
+    }
+
+    function set9ANC() {
+        status.subcategory.ANC = 'Yes';
+        rawData.basic.MCH = 'ANC';
+        rawData.ANC.LMP = '2024/2/1';
+        rawData.ANC.EDD = '2024/10/1';
+        rawData.basic.gender = 'female';
+        rawData.basic.age = 30;
+        return true;
+    }
+
+    function setPNC() {
+        status.subcategory.PNC = 'Yes';
+        rawData.basic.MCH = 'PNC';
+        return true;
+    }
+
+    function setAsthma() {
+        status.subcategory.Asthma = 'Yes';
+        return true;
+    }
+
+    function setCOPD() {
+        status.subcategory.COPD = 'Yes';
+        return true;
+    }
+
+    function setHypertension() {
+        status.subcategory.Hypertension = 'Yes';
+        return true;
+    }
+
+    function setDiabetes() {
+        status.subcategory.Diabetes = 'Yes';
         return true;
     }
 
@@ -44,27 +106,27 @@
                 multi_input.value[i] = null;
             }
         }
-        getCurrent(item.next);
+        getNext(item);
     }
 
     function moveFromTextInput(item) {
         inputDataStructure(item);
-        getCurrent(item.next);
+        getNext(item);
     }
 
     function moveFromTextInputOptional(item) {
         inputDataStructure(item);
-        getCurrent(item.nexts[0]);
+        getNext(item, 0);
     }
 
     function moveFromDateInput(item) {
         inputDataStructure(item);
-        getCurrent(item.next);
+        getNext(item);
     }
 
     function moveFromDateInputOptional(item) {
         inputDataStructure(item);
-        getCurrent(item.nexts[0]);
+        getNext(item, 0);
     }
 
     function inputDataStructure(item) {
@@ -79,40 +141,114 @@
                     path = path[name];
                 }
             }
-            inputValue.value = null;
         }
+        inputValue.value = null;
     }
 
-    function moveFromSelection(item, cap, nextId) {
-        let path = rawData;
-        if (item.dataname != null) {
-            for (var j = 0; j < item.dataname.length; j++) {
-                const name = item.dataname[j];
-                if (j === item.dataname.length - 1) {
-                    path[name] = cap;
+    function inputSetStructure(item, number = 0) {
+        let path = status;
+        if ('setname' in item && 'setvalue' in item) {
+            for (var j = 0; j < item.setname.length; j++) {
+                const name = item.setname[j];
+                if (j === item.setname.length - 1) {
+                    path[name] = item.setvalue[number];
+                    return;
                 }
                 else {
                     path = path[name];
                 }
             }
-            inputValue.value = null;
         }
-        getCurrent(nextId);
     }
 
-    function inputData() {
+    function checkComplete(item){
+        if ('checkComplete' in item && item.checkComplete === 'Yes') {
+            return getIf('VeryUrgent', rawData, status)
+        }
+        return false
+    }
+
+    function moveFromSelection(item, cap, number) {
+        if (item.id === 'Set1') {
+            getOperation(cap);
+        }
+        inputValue.value = cap;
+        inputDataStructure(item);
+        inputSetStructure(item, number);
+        if (checkComplete(item)) {
+            current.value = interviewFlow.find(i => i.id === 'RESULT_VERYURGENT');
+        }
+        else {
+            getNext(item);
+        }
+    }
+
+    function getNext(item, number = 0) {
+        console.info(item.id);
+        let find = null;
+        if ('next' in item) {
+            find = interviewFlow.find(i => i.id === item.next);
+        }
+        else if ('nexts' in item) {
+            find = interviewFlow.find(i => i.id === item.nexts[number]);
+        }
+        else {
+            const index = interviewFlow.findIndex(i => i.id === item.id);
+            if (index < 0) {
+                console.error("can't find interview");
+                return;
+            }
+            find = interviewFlow[index + 1];
+        }
+        if (find === undefined) {
+            console.error("can't find interview");
+            return;
+        }
+        if ('conditon' in find) {
+            if (getCondition(find.condition, rawData))
+                find = interviewFlow.find(item => item.id === find.nexts[0]);
+            else
+                find = interviewFlow.find(item => item.id === find.nexts[1]);
+        }
+        if ('ifs' in find) {
+            let flg = true;
+            for (var j = 0; j < find.ifs.length; j++) {
+                if (getIf(find.ifs[j], rawData, status) === false) {
+                    flg = false;
+                    break;
+                }
+            }
+            if (flg === false) {
+                return getNext(find)
+            }
+        }
+
+        current.value = find;
+        if (find.type === "Branch" || find.type === "Operation") {
+            getCurrent(find);
+        }
+        console.info(find.msg);
+        return find;
+    }
+
+    function reason(){
+        current.value = interviewFlow.find(item => item.id ==='Reason');
+    }
+
+    function returnStart(){
+        current.value = interviewFlow.find(item => item.id ==='Start');
     }
 
     function getCurrent(id) {
         console.info(id);
         let find = interviewFlow.find(item => item.id === id);
-        if (find.condition != null) {
+        if ('conditon' in find) {
             if (getCondition(find.condition, rawData))
                 find = interviewFlow.find(item => item.id === find.nexts[0]);
             else 
                 find = interviewFlow.find(item => item.id === find.nexts[1]);
         }
-        if (find.operation != null) {
+        if ('operation' in find) {
             getOperation(find.operation);
             find = interviewFlow.find(item => item.id === find.next);
         }
@@ -143,21 +279,21 @@
     <span>{{ current.explanation }}</span>
 
     <div class="message" v-if="current.type === 'Selection'">
-        <template v-for="next in current.nexts">
-            <button type="button" @click="moveFromSelection(current, next.cap, next.id)">{{ next.cap }}</button>
+        <template v-for="(cap, index) in current.caps">
+            <button type="button" @click="moveFromSelection(current, cap, index)">{{ cap }}</button>
             <br>
         </template>
     </div>
 
     <div class="message" v-if="current.type === 'YesNo'">
-        <button type="button" @click="moveFromSelection(current, 'Yes', current.nexts[0])">Yes</button><br>
-        <button type="button" @click="moveFromSelection(current, 'No', current.nexts[1])">No</button><br>
+        <button type="button" @click="moveFromSelection(current, 'Yes', 0)">Yes</button><br>
+        <button type="button" @click="moveFromSelection(current, 'No', 1)">No</button><br>
     </div>
 
     <div class="message" v-if="current.type === 'YesNoUnknown'">
-        <button type="button" @click="moveFromSelection(current, 'Yes', current.nexts[0])">Yes</button><br>
-        <button type="button" @click="moveFromSelection(current, 'No', current.nexts[1])">No</button><br>
-        <button type="button" @click="moveFromSelection(current, 'Unknown', current.nexts[2])">Unknown</button><br>
+        <button type="button" @click="moveFromSelection(current, 'Yes', 0)">Yes</button><br>
+        <button type="button" @click="moveFromSelection(current, 'No', 1)">No</button><br>
+        <button type="button" @click="moveFromSelection(current, 'Unknown', 2)">Unknown</button><br>
     </div>
 
     <div class="message" v-if="current.type === 'MultiInput'">
@@ -176,7 +312,7 @@
     <div class="message" v-if="current.type === 'TextInputOptional'">
         <input v-model="inputValue"><br>
         <button type="button" @click="moveFromTextInputOptional(current)">Next</button><br>
-        <button type="button" @click="getCurrent(current.nexts[1])">Skip</button><br>
+        <button type="button" @click="getNext(current)">Skip</button><br>
     </div>
 
     <div class="message" v-if="current.type === 'DateInput'">
@@ -187,26 +323,24 @@
     <div class="message" v-if="current.type === 'DateInputOptional'">
         <input v-model="inputValue"><br>
         <button type="button" @click="moveFromDateInputOptional(current)">Next</button><br>
-        <button type="button" @click="getCurrent(current.nexts[1])">Skip</button><br>
+        <button type="button" @click="getNext(current)">Skip</button><br>
     </div>
 
     <div class="message" v-if="current.type === 'Message'">
-        <button type="button" @click="getCurrent(current.next)">Next</button><br>
+        <button type="button" @click="getNext(current)">Next</button><br>
     </div>
 
     <div class="message" v-if="current.type === 'Result'">
-        <button type="button" @click="getCurrent(current.next)">OK</button><br>
+        <button type="button" @click="reason()">OK</button><br>
     </div>
 
     <div class="message" v-if="current.type === 'Terminate'">
-        <button type="button" @click="getCurrent('Start')">Finish</button><br>
+        <button type="button" @click="returnStart()">Finish</button><br>
     </div>
 
 
     <br>
-    <div class="displaydata">
-        {{data}}
-    </div>
+        <DataView class="displaydata" :model="data"></DataView>
 </template>
 
 <style scoped>

@@ -1,12 +1,12 @@
-import { veryUrgent } from "./VeryUrgent.js";
-import { urgent } from "./Urgent.js";
+import { veryUrgent } from "./components/VeryUrgent.js";
+import { urgent } from "./components/Urgent.js";
+import { moderate } from "./components/Moderate.js";
+import { moderateLow } from "./components/ModerateLow.js";
 
 export function getCondition(condition_id, data) {
     switch (condition_id) {
         case 'IsAdult':
             return isAdult(data);
-        case 2:
-            return (data.basic.gender === 'female');
         case 'Over36weeks':
             return isOver36weeks(data);
         case 'Over32weeks':
@@ -39,12 +39,7 @@ export function getCondition(condition_id, data) {
             return (data.basic.MCH === 'ANC')
         case 'IsPNC':
             return (data.basic.MCH === 'PNC')
-        case 'VeryHighBP':
-            if (data.medical_basic.SBP >= 160 || data.medical_basic.DBP >= 110)
-                return true;
-            else
-                return false;
-        case 'HighBP':
+        case 'RemeasureBP':
             if (data.medical_basic.SBP >= 140 || data.medical_basic.DBP >= 90)
                 return true;
             else
@@ -58,7 +53,9 @@ export function getCondition(condition_id, data) {
         case 'CheckResultHigh':
             return urgent(data);
         case 'CheckResultModerate':
-            return urgent(data);
+            return moderate(data);
+        case 'CheckResultModerateLow':
+            return moderateLow(data);
     }
 }
 

@@ -60,18 +60,22 @@
             weight_before_pregnancy: null,
             waist_before_pregnancy: null,
             flow: {
+                // before 20
                 signs_delivery: null,
                 nausea: null,
                 lower_abdominal_pain_vaginal_bleeding_clots: null,
-                lower_abdominal_pain_with_uterine_contractions: null,
-                vaginal_bleeding_feeling_water_breaking: null,
-                pain_burning_while_urinating: null,
                 need_urinating: null,
                 bloody_urine: null,
                 pressure_cramping_groin: null,
                 pain_arms_legs_back_chest: null,
                 difficulty_breathing: null,
-                temprature: null,
+                //before 36
+                lower_abdominal_pain_with_uterine_contractions: null, //b2
+                vaginal_bleeding_feeling_water_breaking: null, //b3
+                //General
+                temperature: null,
+                pain_burning_while_urinating: null, // a11, d19
+                //after 36
                 high_risk_pregnancy: null,
                 labor_pain: null,
                 water_broken: null,
@@ -105,54 +109,56 @@
         },
         PNC: {
             flow: {
-                headache: null,
+                headache: null, //e2
                 nausea_vomit: null,
                 change_vision: null,
                 upper_abdominal_pain: null,
-                vaginal_bleeding: null,
-                abdominal_pain: null,
-                difficult_breathing: null,
-                redness_swelling: null,
-                calf_pain: null,
-                fatigue_weakness: null,
-                irregular_heartbeats: null,
-                shortness_breaths: null,
-                dizziness_lightheadedness: null,
-                chest_pain: null,
-                swollen_breast: null,
-                red_breast: null,
-                sore_cracked_nipples: null,
-                problems_urinating: null,
-                perineum_pain: null,
-                puslike_discharge: null,
-                sad_despair: null,
-                anxious: null,
-                detouched: null,
-                hurting_you: null,
-                DV: null,
+                vaginal_bleeding: null, //e7
+                fatigue_weakness: null, //e9
+                irregular_heartbeats: null, //e10
+                shortness_breaths: null, //e11
+                dizziness_lightheadedness: null, //e12
+                chest_pain: null, //e13
+                difficult_breathing: null, // e14
+                redness_swelling: null, //e15
+                calf_pain: null, //e16
+
+                abdominal_pain: null, // e8
+                swollen_breast: null, // e17
+                red_breast: null, // e18
+                sore_cracked_nipples: null, // e19
+                problems_urinating: null, // e20
+                perineum_pain: null, // e21
+                puslike_discharge: null, // e22
+                sad_despair: null, // e23
+                anxious: null, // e24
+                detouched: null, // e25
+                hurting_you: null, // e26
+                DV: null, // e27
             }
         },
         Newborn: {
             flow: {
-                moving: null,
-                breathe: null,
-                reapiratory_rate: null,
-                retraction: null,
-                grunting: null,
+                moving: null, // f5
+                breathe: null, // f6
+                reapiratory_rate: null, // f7
+                retraction: null, // f8
+                grunting: null, // f9
                 body_temperature: null,
                 body_temperature2: null,
                 body_temperature3: null,
-                different: null,
-                difficult_feed: null,
-                red_cord: null,
-                pustules: null,
-                family_infectious_disease: null,
-                bleeding: null,
+                different: null, // f14
+                difficult_feed: null, // f15
+                red_cord: null, // f16
+                pustules: null, // f17
+                family_infectious_disease: null, // f18
+                bleeding: null, //f23
                 cord_draining_pus: null,
-                vomit: null,
+                vomit: null, // f20
+                dark_stool: null, // f21
                 yellow_face: null,
-                seizure: null,
-                pustules_eczema: null,
+                seizure: null, // f25
+                pustules_eczema: null, // f26
                 urinate_6_times: null,
                 bowel_movement: null,
                 seen_by_health_worker: null,
@@ -238,6 +244,7 @@
                 when: null,
                 where: null,
                 agree: null,
+                agree_final: null,
             }
         }
     };

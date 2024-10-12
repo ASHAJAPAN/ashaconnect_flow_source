@@ -22,8 +22,8 @@
                 msg: 'Select the patient to test. ',
                 explanation: '',
                 caps: [
-                    '5 months pregnant woman',
-                    '9 months pregnant woman',
+                    'ANC (5 months)',
+                    'ANC (9 months)',
                     'PNC',
                     'Asthma',
                     'COPD',
@@ -703,13 +703,15 @@
             },
 
             // ******* ANC *******
+
+            // body temperature
             {
                 id: 'ANC0',
                 type: "TextInput",
-                msg: 'Take body tempurature',
+                msg: 'Take body temperature',
                 explanation: '',
                 ifs: ['ANC'],
-                dataname: ['ANC', 'flow', 'temprature'],
+                dataname: ['ANC', 'flow', 'temperature'],
                 checkComplete: 'Yes',
             },
 
@@ -1011,7 +1013,7 @@
                 type: "YesNo",
                 msg: 'Has the blood test been completed?',
                 explanation: '',
-                ifs: ['ANC', 'notVeryUrgent', 'no_blood_test'],
+                ifs: ['ANC', 'no_blood_test'],
                 dataname: ['ANC', 'test', 'blood_test']
             },
 
@@ -1020,7 +1022,7 @@
                 type: "YesNoUnknown",
                 msg: 'Tell me the result of HIV test.',
                 explanation:'You can answer by no or unknown if you do not want to answer.',
-                ifs: ['ANC', 'notVeryUrgent', 'blood_test'],
+                ifs: ['ANC', 'blood_test'],
                 dataname: ['ANC', 'test', 'HIV']
             },
 
@@ -1159,46 +1161,6 @@
             },
 
             {
-                id: 'PNC_e8',
-                type: "YesNo",
-                msg: 'Do you have abdominal pain that makes daily life difficult?',
-                explanation: '',
-                ifs: ['PNC'],
-                checkComplete: 'Yes',
-                dataname: ['PNC', 'flow', 'abdominal_pain']
-            },
-
-            {
-                id: 'PNC_e14',
-                type: "YesNo",
-                msg: 'Do you have fast or difficult breathing?',
-                explanation: '',
-                ifs: ['PNC'],
-                checkComplete: 'Yes',
-                dataname: ['PNC', 'flow', 'difficult_breathing']
-            },
-
-            {
-                id: 'PNC_e15',
-                type: "YesNo",
-                msg: 'Do you have Redness or swelling of body?',
-                explanation: '',
-                ifs: ['PNC'],
-                checkComplete: 'Yes',
-                dataname: ['PNC', 'flow', 'redness_swelling']
-            },
-
-            {
-                id: 'PNC_e16',
-                type: "YesNo",
-                msg: 'Do you have calf pain?',
-                explanation: '',
-                ifs: ['PNC'],
-                checkComplete: 'Yes',
-                dataname: ['PNC', 'flow', 'calf_pain']
-            },
-            
-            {
                 id: 'PNC_e9',
                 type: "YesNo",
                 msg: 'Do you feel severe fatigue or weakness?',
@@ -1243,6 +1205,46 @@
                 ifs: ['PNC'],
                 dataname: ['PNC', 'flow', 'chest_pain']
             },
+
+            {
+                id: 'PNC_e14',
+                type: "YesNo",
+                msg: 'Do you have fast or difficult breathing?',
+                explanation: '',
+                ifs: ['PNC'],
+                checkComplete: 'Yes',
+                dataname: ['PNC', 'flow', 'difficult_breathing']
+            },
+            // swelling body
+            {
+                id: 'PNC_e15',
+                type: "YesNo",
+                msg: 'Do you have Redness or swelling of body?',
+                explanation: '',
+                ifs: ['PNC'],
+                checkComplete: 'Yes',
+                dataname: ['PNC', 'flow', 'redness_swelling']
+            },
+            // calf pain
+            {
+                id: 'PNC_e16',
+                type: "YesNo",
+                msg: 'Do you have calf pain?',
+                explanation: '',
+                ifs: ['PNC'],
+                checkComplete: 'Yes',
+                dataname: ['PNC', 'flow', 'calf_pain']
+            },
+            // abdominal pain
+            {
+                id: 'PNC_e8',
+                type: "YesNo",
+                msg: 'Do you have abdominal pain that makes daily life difficult?',
+                explanation: '',
+                ifs: ['PNC'],
+                checkComplete: 'Yes',
+                dataname: ['PNC', 'flow', 'abdominal_pain']
+            },
             
             {
                 id: 'PNC_e17',
@@ -1261,7 +1263,8 @@
                 ifs: ['PNC'],
                 dataname: ['PNC', 'flow', 'red_breast']
             },
-            
+
+            // cracked nipples
             {
                 id: 'PNC_e19',
                 type: "YesNo",
@@ -1406,6 +1409,7 @@
                 dataname: ['Newborn', 'flow', 'breathe']
             },
 
+            // reapiratory rate'
             {
                 id: 'Newborn_f7',
                 type: "TextInput",
@@ -1437,6 +1441,7 @@
                 dataname: ['Newborn', 'flow', 'retraction']
             },
 
+            // body temperature
             {
                 id: 'Newborn_f10',
                 type: "TextInput",

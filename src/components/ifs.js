@@ -147,15 +147,15 @@ export function getIf(if_name, data, setting) {
         case 'no_agree':
             return (data.Follow.flow.agree !== 'Yes')
         case 'need_follow':
-            return (veryUrgent(data) === true || urgent(data) === true || moderate(data) === true || (setting.Follow.visit !== 'Yes' && data.Follow.flow.agree_final === 'OK'))
+            return (veryUrgent(data) === true || urgent(data) === true || moderate(data) === true || (setting.Follow.visit !== 'Yes' && data.Follow.flow.agree_final !== 'Skip'))
         case 'need_no_follow':
-            return ((veryUrgent(data) === false && urgent(data) === false && moderate(data) === false) || setting.Follow.visit === 'Yes' || data.Follow.flow.agree_final === 'Skip')
+            return ((veryUrgent(data) === false && urgent(data) === false && moderate(data) === false) && (setting.Follow.visit === 'Yes' || data.Follow.flow.agree_final === 'Skip'))
     }
 }
 
 function BPcategory(data) {
-    Scategory = 1;
-    Dcategory = 1;
+    let Scategory = 1;
+    let Dcategory = 1;
     if (data.medical_basic.SBP !== undefined || data.medical_basic.SBP !== null) {
         if (data.medical_basic.SBP >= 160) { return 3; }
         if (data.medical_basic.SBP >= 140) { Scategory = 2; }

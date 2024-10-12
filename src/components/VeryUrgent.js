@@ -1,9 +1,8 @@
-
+import { decision } from "./Decision.js"
 export function veryUrgent(data) {
     // General
     if (Number(data.medical_basic.SBP) >= 160) { return true; }
     if (Number(data.medical_basic.DBP) >= 110) { return true; }
-    if (data.ANC.flow.signs_delivery === 'Yes') { return true; }
     if (data.ANC.flow.water_not_clear === 'Yes') { return true; }
     if (data.ANC.flow.water_smells_bad === 'Yes') { return true; }
     if (data.ANC.flow.water_gush === 'Yes') { return true; }
@@ -19,9 +18,6 @@ export function veryUrgent(data) {
     if (data.ANC.flow.severe_edema === 'Yes') { return true; }
     if (data.ANC.flow.severe_headache === 'Yes') { return true; }
     // before 36
-    if (data.ANC.flow.signs_delivery === 'Yes') { return true; } // a8
-    if (data.ANC.flow.nausea === 'Yes') { return true; } // a9
-    if (data.ANC.flow.lower_abdominal_pain_vaginal_bleeding_clots === 'Yes') { return true; } // a10
 
 
     if (data.PNC.flow.headache === 'Yes') { return true; } // e2
@@ -72,54 +68,172 @@ export function veryUrgent(data) {
     if (data.Diabetes.flow.respiratory_rate === 'Yes') { return true; } // d2
     if (data.Diabetes.flow.lost_consciousness === 'Yes') { return true; } // d3
 
-
-    for (var i = 0; i < model.single_condition.length; i++) {
-        const condition = model.single_condition[i]
-        let path = data;
-        let dataValue = null;
-        for (var j = 0; j < condition.data.length; j++) {
-            const name = condition.data[j];
-            if (j === condition.data.length - 1) {
-                dataValue = path[name];
-            }
-            else {
-                path = path[name];
-            }
-        }
-        switch (condition.operator) {
-            case '<':
-                if (dataValue !== undefined && dataValue !== null) {
-                    if (Number(dataValue) < condition.value) {
-                        return true;
-                    }
-                }
-                break;
-            case '>':
-                if (dataValue !== undefined && dataValue !== null) {
-                    if (Number(dataValue) > condition.value) {
-                        return true;
-                    }
-                }
-                break;
-        }
-    }
-    return false;
+    return decision(model, data);
 }
 
 const model = {
     single_condition: [
+    // ******* ANC *******
+        // a8
+        {
+            data: ['ANC', 'flow', 'signs_delivery'],
+            operator: '=Yes'
+        },
+        // b2
+        {
+            data: ['ANC', 'flow', 'lower_abdominal_pain_with_uterine_contractions'],
+            operator: '=Yes'
+        },
+        // b3
+        {
+            data: ['ANC', 'flow', 'vaginal_bleeding_feeling_water_breaking'],
+            operator: '=Yes'
+        },
+        // ******* PNC *******
+        // e2
+        {
+            data: ['PNC', 'flow', 'headache'],
+            operator: '=Yes'
+        },
+        // e3
+        {
+            data: ['PNC', 'flow', 'nausea_vomit'],
+            operator: '=Yes'
+        },
+        // e4
+        {
+            data: ['PNC', 'flow', 'change_vision'],
+            operator: '=Yes'
+        },
+        // e5
+        {
+            data: ['PNC', 'flow', 'upper_abdominal_pain'],
+            operator: '=Yes'
+        },
+        // e7
+        {
+            data: ['PNC', 'flow', 'vaginal_bleeding'],
+            operator: '=Yes'
+        },
+        // e9
+        {
+            data: ['PNC', 'flow', 'fatigue_weakness'],
+            operator: '=Yes'
+        },
+        // e10
+        {
+            data: ['PNC', 'flow', 'irregular_heartbeats'],
+            operator: '=Yes'
+        },
+        // e11
+        {
+            data: ['PNC', 'flow', 'shortness_breaths'],
+            operator: '=Yes'
+        },
+        // e12
+        {
+            data: ['PNC', 'flow', 'dizziness_lightheadedness'],
+            operator: '=Yes'
+        },
+        // e13
+        {
+            data: ['PNC', 'flow', 'chest_pain'],
+            operator: '=Yes'
+        },
+        // e14
+        {
+            data: ['PNC', 'flow', 'difficult_breathing'],
+            operator: '=Yes'
+        },
+        // e15
+        {
+            data: ['PNC', 'flow', 'redness_swelling'],
+            operator: '=Yes'
+        },
+        // e16
+        {
+            data: ['PNC', 'flow', 'calf_pain'],
+            operator: '=Yes'
+        },
+        // ******* Newborn *******
+        // f5
+        {
+            data: ['Newborn', 'flow', 'moving'],
+            operator: '=No'
+        },
+        // f6
+        {
+            data: ['Newborn', 'flow', 'breathe'],
+            operator: '=No'
+        },
+        // f7
+        {
+            data: ['Newborn', 'flow', 'reapiratory_rate'],
+            operator: '>',
+            value: 60
+        },
+        // f8
+        {
+            data: ['Newborn', 'flow', 'retraction'],
+            operator: '=Yes'
+        },
+        // f9
+        {
+            data: ['Newborn', 'flow', 'grunting'],
+            operator: '=Yes'
+        },
         {
             // f11
             data: ['Newborn', 'flow', 'body_temperature2'],
             operator: '<',
             value: 35.5
         },
-
         {
             // f12
             data: ['Newborn', 'flow', 'body_temperature3'],
             operator: '<',
             value: 36.5
+        },
+        // f14
+        {
+            data: ['Newborn', 'flow', 'different'],
+            operator: '=Yes'
+        },
+        // f15
+        {
+            data: ['Newborn', 'flow', 'difficult_feed'],
+            operator: '=Yes'
+        },
+        // f16
+        {
+            data: ['Newborn', 'flow', 'red_cord'],
+            operator: '=Yes'
+        },
+        // f17
+        {
+            data: ['Newborn', 'flow', 'pustules'],
+            operator: '=Yes'
+        },
+        // f18
+        {
+            data: ['Newborn', 'flow', 'family_infectious_disease'],
+            operator: '=Yes'
+        },
+        // f19
+        {
+            data: ['Newborn', 'flow', 'body_temperature3'],
+            operator: '>',
+            value: 38.0
+        },
+        // f23
+        {
+            data: ['Newborn', 'flow', 'bleeding'],
+            operator: '=Yes'
+        },
+        // f23
+        {
+            data: ['Newborn', 'flow', 'cord_draining_pus'],
+            operator: '=Yes'
         },
 
         {
@@ -141,6 +255,23 @@ const model = {
             data: ['medical_basic', 'DBP'],
             operator: '<',
             value: 60
+        },
+
+        // ******* Asthma *******
+        // a2
+        {
+            data: ['Asthma', 'flow', 'alter_consciousness'],
+            operator: '=Yes'
+        },
+        // a3
+        {
+            data: ['Asthma', 'flow', 'cyanosis'],
+            operator: '=Yes'
+        },
+        // a4
+        {
+            data: ['Asthma', 'flow', 'effort_breathing'],
+            operator: '=Yes'
         },
 
         {

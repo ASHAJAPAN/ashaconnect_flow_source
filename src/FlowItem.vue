@@ -3,27 +3,20 @@
     import interviewFlow from './components/Question.vue'
     import rawData from './components/Data.vue'
     import status from './components/Status.vue'
-    import { getCondition } from './condition.js'
     import { getIf } from './components/ifs.js'
     import DataView from './components/DataView.vue'
     import { veryUrgent } from "./components/VeryUrgent.js";
 
+    // Initialize whole data
+
+
     // Setting sample patients data
     function getOperation(operation_id) {
         switch (operation_id) {
-            case 'SetANC':
-                rawData.basic.MCH = 'ANC';
-                break;
-            case 'SetPNC':
-                rawData.basic.MCH = 'PNC';
-                break;
-            case 'SetMiscarry':
-                rawData.basic.MCH = 'Miscarriage';
-                break;
-            case '5 months pregnant woman':
+            case 'ANC (5 months)':
                 set5ANC();
                 break;
-            case '9 months pregnant woman':
+            case 'ANC (9 months)':
                 set9ANC();
                 break;
             case 'PNC':
@@ -169,7 +162,10 @@
     }
 
     function moveFromSelection(item, cap, number) {
-        if (item.id === 'Set1') {
+        if (item.id === 'Start') {
+            //Initialize();
+        }
+        else if (item.id === 'Set1') {
             getOperation(cap);
         }
         inputValue.value = cap;
@@ -186,29 +182,15 @@
     function getNext(item, number = 0) {
         console.info(item.id);
         let find = null;
-        if ('next' in item) {
-            find = interviewFlow.find(i => i.id === item.next);
-        }
-        else if ('nexts' in item) {
-            find = interviewFlow.find(i => i.id === item.nexts[number]);
-        }
-        else {
-            const index = interviewFlow.findIndex(i => i.id === item.id);
-            if (index < 0) {
-                console.error("can't find interview");
-                return;
-            }
-            find = interviewFlow[index + 1];
-        }
-        if (find === undefined) {
+        const index = interviewFlow.findIndex(i => i.id === item.id);
+        if (index < 0) {
             console.error("can't find interview");
             return;
         }
-        if ('conditon' in find) {
-            if (getCondition(find.condition, rawData))
-                find = interviewFlow.find(item => item.id === find.nexts[0]);
-            else
-                find = interviewFlow.find(item => item.id === find.nexts[1]);
+        find = interviewFlow[index + 1];
+        if (find === undefined) {
+            console.error("can't find interview");
+            return;
         }
         if ('ifs' in find) {
             let flg = true;
@@ -224,9 +206,9 @@
         }
 
         current.value = find;
-        if (find.type === "Branch" || find.type === "Operation") {
-            getCurrent(find);
-        }
+        //if (find.type === "Branch" || find.type === "Operation") {
+        //    getCurrent(find);
+        //}
         console.info(find.msg);
         return find;
     }
@@ -242,12 +224,12 @@
     function getCurrent(id) {
         console.info(id);
         let find = interviewFlow.find(item => item.id === id);
-        if ('conditon' in find) {
-            if (getCondition(find.condition, rawData))
-                find = interviewFlow.find(item => item.id === find.nexts[0]);
-            else 
-                find = interviewFlow.find(item => item.id === find.nexts[1]);
-        }
+        //if ('conditon' in find) {
+        //    if (getCondition(find.condition, rawData))
+        //        find = interviewFlow.find(item => item.id === find.nexts[0]);
+        //    else 
+        //        find = interviewFlow.find(item => item.id === find.nexts[1]);
+        //}
         if ('operation' in find) {
             getOperation(find.operation);
             find = interviewFlow.find(item => item.id === find.next);
@@ -335,7 +317,7 @@
     </div>
 
     <div class="message" v-if="current.type === 'Terminate'">
-        <button type="button" @click="returnStart()">Finish</button><br>
+        <!--<button type="button" @click="returnStart()">Finish</button><br>-->
     </div>
 
 

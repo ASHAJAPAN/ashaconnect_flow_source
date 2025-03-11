@@ -26,6 +26,7 @@
         ANC: {
             facility_decided: 'No',
             EDD_told: 'No',
+            visited: 'No'
         },
         Newborn: {
             weighted: "No"
@@ -36,6 +37,9 @@
         },
         Follow: {
             visit: "No"
+        },
+        NCD: {
+            visit_hp: "No"
         }
     };
 </script>

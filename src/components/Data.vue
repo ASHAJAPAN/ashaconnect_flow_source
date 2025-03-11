@@ -9,6 +9,12 @@
             ward: null,
             healthconnect_id: null,
             MCH: null,
+            ANC: null,
+            PNC: null,
+            Newborn: null,
+            Asthma: null,
+            diabetes: null,
+            hepertension: null,
         },
         medical_basic: {
             height: null,
@@ -92,7 +98,9 @@
                 vomiting: null,
                 severe_stomachache: null,
                 severe_headache: null,
-                frequent_urination: null
+                frequent_urination: null,
+                ANC_place: null,
+                ANC_date: null
             },
             test: {
                 blood_test: null,
@@ -166,6 +174,14 @@
                 weight: null,
             }
         },
+        NCD_General: {
+            condition: null,
+            cold: null,
+            medical_check_where: null,
+            medical_check_when: null,
+            weight: null,
+            WC: null
+        },
         Asthma: {
             flow: {
                 alter_consciousness: null,
@@ -177,12 +193,6 @@
                 exacerbations: null,
                 respiratory_rate: null,
                 difficult_sentence_in_one_breath: null,
-            }
-        },
-        COPD: {
-            flow: {
-                exacerbations: null,
-                breath_shortness_daily: null,
                 breath_shortness_rest: null,
             }
         },
@@ -223,7 +233,7 @@
         Medication: {
             flow: {
                 have_medication: null,
-                missed_medication: null,
+                reason_no_medication: null,
                 no_medication_intent: null,
                 cause_feeling_unwell: null,
                 tell_medical: null,

@@ -1,11 +1,11 @@
 <script setup>
     import { ref } from 'vue'
-    import interviewFlow from './components/Question.vue'
+    import interviewFlow from './components/CombinedQuestion.js'
     import rawData from './components/Data.vue'
     import status from './components/Status.vue'
     import { getIf } from './components/ifs.js'
     import DataView from './components/DataView.vue'
-    import { veryUrgent } from "./components/VeryUrgent.js";
+    //import { mostUrgent } from "./components/MostUrgent.js";
 
     // Initialize whole data
 
@@ -13,20 +13,20 @@
     // Setting sample patients data
     function getOperation(operation_id) {
         switch (operation_id) {
-            case 'ANC (5 months)':
+            case 'ANC (Before 20 weeks)':
                 set5ANC();
                 break;
-            case 'ANC (9 months)':
+            case 'ANC (20 - 36 weeks)':
+                set6ANC();
+                break;
+            case 'ANC (After 36 weeks)':
                 set9ANC();
                 break;
             case 'PNC':
                 setPNC();
                 break;
-            case 'Asthma':
+            case 'Asthma-COPD':
                 setAsthma();
-                break;
-            case 'COPD':
-                setCOPD();
                 break;
             case 'Hypertension':
                 setHypertension();
@@ -40,8 +40,30 @@
     function set5ANC() {
         status.subcategory.ANC = 'Yes';
         rawData.basic.MCH = 'ANC';
-        rawData.ANC.LMP = '2024/5/1';
-        rawData.ANC.EDD = '2025/2/1';
+        const today = new Date();
+        const pastDate = new Date();
+        pastDate.setDate(today.getDate() - 12 * 7);
+        const futureDate = new Date();
+        futureDate.setDate(today.getDate() + 28 * 7);
+        rawData.ANC.LMP = pastDate;
+        rawData.ANC.EDD = futureDate;
+        rawData.ANC.BirthFacilityType = 'HP';
+        rawData.basic.gender = 'female';
+        rawData.basic.age = 25;
+        return true;
+    }
+
+    function set6ANC() {
+        status.subcategory.ANC = 'Yes';
+        rawData.basic.MCH = 'ANC';
+        const today = new Date();
+        const pastDate = new Date();
+        pastDate.setDate(today.getDate() - 24 * 7);
+        const futureDate = new Date();
+        futureDate.setDate(today.getDate() * 16 * 7);
+        rawData.ANC.LMP = pastDate;
+        rawData.ANC.EDD = futureDate;
+        rawData.ANC.BirthFacilityType = 'HP';
         rawData.basic.gender = 'female';
         rawData.basic.age = 25;
         return true;
@@ -50,8 +72,13 @@
     function set9ANC() {
         status.subcategory.ANC = 'Yes';
         rawData.basic.MCH = 'ANC';
-        rawData.ANC.LMP = '2024/2/1';
-        rawData.ANC.EDD = '2024/10/1';
+        const today = new Date();
+        const pastDate = new Date();
+        pastDate.setDate(today.getDate() - 38 * 7);
+        const futureDate = new Date();
+        futureDate.setDate(today.getDate() + 2 * 7);
+        rawData.ANC.LMP = pastDate;
+        rawData.ANC.EDD = futureDate;
         rawData.basic.gender = 'female';
         rawData.basic.age = 30;
         return true;
@@ -65,21 +92,19 @@
 
     function setAsthma() {
         status.subcategory.Asthma = 'Yes';
-        return true;
-    }
-
-    function setCOPD() {
-        status.subcategory.COPD = 'Yes';
+        rawData.basic.Asthma = 'Yes';
         return true;
     }
 
     function setHypertension() {
         status.subcategory.Hypertension = 'Yes';
+        rawData.basic.Hypertension = 'Yes';
         return true;
     }
 
     function setDiabetes() {
         status.subcategory.Diabetes = 'Yes';
+        rawData.basic.Diabetes = 'Yes';
         return true;
     }
 
@@ -104,22 +129,42 @@
 
     function moveFromTextInput(item) {
         inputDataStructure(item);
-        getNext(item);
+        if (checkComplete(item)) {
+            current.value = interviewFlow.find(i => i.id === 'RESULT_MOSTURGENT');
+        }
+        else {
+            getNext(item);
+        }
     }
 
     function moveFromTextInputOptional(item) {
         inputDataStructure(item);
-        getNext(item, 0);
+        if (checkComplete(item)) {
+            current.value = interviewFlow.find(i => i.id === 'RESULT_MOSTURGENT');
+        }
+        else {
+            getNext(item, 0);
+        }
     }
 
     function moveFromDateInput(item) {
         inputDataStructure(item);
-        getNext(item);
+        if (checkComplete(item)) {
+            current.value = interviewFlow.find(i => i.id === 'RESULT_MOSTURGENT');
+        }
+        else {
+            getNext(item);
+        }
     }
 
     function moveFromDateInputOptional(item) {
         inputDataStructure(item);
-        getNext(item, 0);
+        if (checkComplete(item)) {
+            current.value = interviewFlow.find(i => i.id === 'RESULT_MOSTURGENT');
+        }
+        else {
+            getNext(item, 0);
+        }
     }
 
     function inputDataStructure(item) {
@@ -156,7 +201,7 @@
 
     function checkComplete(item){
         if ('checkComplete' in item && item.checkComplete === 'Yes') {
-            return getIf('VeryUrgent', rawData, status)
+            return getIf('Urgent4', rawData, status)
         }
         return false
     }
@@ -172,7 +217,7 @@
         inputDataStructure(item);
         inputSetStructure(item, number);
         if (checkComplete(item)) {
-            current.value = interviewFlow.find(i => i.id === 'RESULT_VERYURGENT');
+            current.value = interviewFlow.find(i => i.id === 'RESULT_MOSTURGENT');
         }
         else {
             getNext(item);
@@ -195,7 +240,23 @@
         if ('ifs' in find) {
             let flg = true;
             for (var j = 0; j < find.ifs.length; j++) {
-                if (getIf(find.ifs[j], rawData, status) === false) {
+                const cond = getIf(find.ifs[j], rawData, status);
+                if (cond === false || cond === '') {
+                    flg = false;
+                    break;
+                }
+                if (cond !== true && cond !== '') {
+                    find.explanation = cond;
+                }
+            }
+            if (flg === false) {
+                return getNext(find)
+            }
+        }
+        if ('conditions' in find) {
+            let flg = true;
+            for (var j = 0; j < find.conditions.length; j++) {
+                if (getCondition(find.conditions[j], rawData, status) === false) {
                     flg = false;
                     break;
                 }
@@ -206,15 +267,38 @@
         }
 
         current.value = find;
-        //if (find.type === "Branch" || find.type === "Operation") {
-        //    getCurrent(find);
-        //}
         console.info(find.msg);
         return find;
     }
 
-    function reason(){
-        current.value = interviewFlow.find(item => item.id ==='Reason');
+
+    function getCondition(condition, data, setting) {
+        if ('data' in condition) {
+            for (var i = 0; i < condition.data.length; i++) {
+                let path = data;
+                const name = condition.data[i];
+                if (i === condition.data.length - 1) {
+                    path[name] = item.setvalue[number];
+                    return;
+                }
+                else {
+                    path = path[name];
+                }
+            }
+
+        }
+        if ('operator' in condition) {
+
+        }
+
+        return true
+    }
+
+    function getReason(item) {
+        if (item.type === 'Result')
+        {
+            
+        }
     }
 
     function returnStart(){
@@ -224,12 +308,6 @@
     function getCurrent(id) {
         console.info(id);
         let find = interviewFlow.find(item => item.id === id);
-        //if ('conditon' in find) {
-        //    if (getCondition(find.condition, rawData))
-        //        find = interviewFlow.find(item => item.id === find.nexts[0]);
-        //    else 
-        //        find = interviewFlow.find(item => item.id === find.nexts[1]);
-        //}
         if ('operation' in find) {
             getOperation(find.operation);
             find = interviewFlow.find(item => item.id === find.next);
@@ -313,7 +391,8 @@
     </div>
 
     <div class="message" v-if="current.type === 'Result'">
-        <button type="button" @click="reason()">OK</button><br>
+        <p></p>
+        <button type="button" @click="getNext(current)">OK</button><br>
     </div>
 
     <div class="message" v-if="current.type === 'Terminate'">

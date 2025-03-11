@@ -1,4 +1,4 @@
-export function decision(model, data) {
+export function decision(model, data, reasonMessage = '') {
     for (var i = 0; i < model.single_condition.length; i++) {
         const condition = model.single_condition[i]
         let path = data;
@@ -16,32 +16,32 @@ export function decision(model, data) {
             case '=Yes':
                 if (dataValue !== undefined && dataValue !== null) {
                     if (dataValue === 'Yes') {
-                        return true;
+                        reasonMessage += condition.reason;
                     }
                 }
                 break;
             case '=No':
                 if (dataValue !== undefined && dataValue !== null) {
                     if (dataValue === 'No') {
-                        return true;
+                        reasonMessage += condition.reason;
                     }
                 }
                 break;
             case '<':
                 if (dataValue !== undefined && dataValue !== null) {
                     if (Number(dataValue) < condition.value) {
-                        return true;
+                        reasonMessage += condition.reason;
                     }
                 }
                 break;
             case '>':
                 if (dataValue !== undefined && dataValue !== null) {
                     if (Number(dataValue) > condition.value) {
-                        return true;
+                        reasonMessage += condition.reason;
                     }
                 }
                 break;
         }
     }
-    return false;
+    return reasonMessage;
 }

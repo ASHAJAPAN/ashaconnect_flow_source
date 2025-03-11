@@ -1,7 +1,6 @@
-import { veryUrgent } from "./VeryUrgent.js";
-import { urgent } from "./Urgent.js";
-import { moderate } from "./Moderate.js";
-import { moderateLow } from "./ModerateLow.js";
+import { urgent4 } from "./Urgent4.js";
+import { urgent3 } from "./Urgent3.js";
+import { urgent2 } from "./Urgent2.js";
 export function getIf(if_name, data, setting) {
     switch (if_name) {
         case 'normal':
@@ -52,26 +51,32 @@ export function getIf(if_name, data, setting) {
             return (data.ANC.EDD === undefined || data.ANC.EDD === null);
         case 'toldEDD':
             return (setting.ANC.EDD_told === 'Yes')
-        case 'VeryUrgent':
-            return veryUrgent(data);
-        case 'notVeryUrgent':
-            return (veryUrgent(data) === false);
-        case 'Urgent':
-            return urgent(data);
-        case 'Moderate':
-            return moderate(data);
-        case 'Moderate-Low':
-            return moderateLow(data);
-        case 'Low':
-            return (veryUrgent(data) === false && urgent(data) === false && moderate(data) === false && moderateLow(data) === false && setting.interview_type !== 'follow');
+        case 'Urgent4':
+            return urgent4(data);
+        case 'notUrgent4':
+            return (urgent4(data) === '');
+        case 'Urgent3':
+            return urgent3(data);
+        case 'notUrgent3':
+            return (urgent3(data) === '' && urgent4(data) === '');
+        case 'Urgent2':
+            return urgent2(data);
+        case 'notUrgent2':
+            return (urgent2(data) === '' && urgent3(data) === '' && urgent4(data) === '' && setting.interview_type === 'normal');
+        //case 'Low':
+        //    return (urgent4(data) === '' && urgent3(data) === '' && urgent2(data) === '' && setting.interview_type !== 'follow');
         case 'ANCbefore36':
+            const chk = isOver36weeks(data);
             return (isOver36weeks(data) === false);
+            Break;
         case 'ANCafter36':
             return isOver36weeks(data);
         case 'ANCbefore20':
             return (isOver20weeks(data) === false);
         case 'ANCafter20':
             return isOver20weeks(data);
+        case 'ANC_visited':
+            return (setting.ANC.visited == 'Yes')
         case 'water_broken':
             return (data.ANC.flow.water_broken === 'Yes');
         case 'BPcategory2':
@@ -111,11 +116,9 @@ export function getIf(if_name, data, setting) {
         case 'weighted':
             return (setting.Newborn.weighted === 'Yes');
         case 'NCD':
-            return (setting.subcategory.Asthma === 'Yes' || setting.subcategory.Asthma === 'Yes' || setting.subcategory.diabetes === 'Yes' || setting.subcategory.hypertension === 'Yes')
+            return (setting.subcategory.Asthma === 'Yes' || setting.subcategory.Diabetes === 'Yes' || setting.subcategory.Hypertension === 'Yes')
         case 'Asthma':
             return (setting.subcategory.Asthma === 'Yes')
-        case 'COPD':
-            return (setting.subcategory.copd === 'Yes')
         case 'Diabetes':
             return (setting.subcategory.diabetes === 'Yes')
         case 'Hypertension':
@@ -126,8 +129,6 @@ export function getIf(if_name, data, setting) {
             return (data.Medication.flow.have_medication === 'Yes')
         case 'missed_medication':
             return (data.Medication.flow.missed_medication === 'Yes')
-        case 'no_medication_intent':
-            return (data.Medication.flow.no_medication_intent === 'Yes')
         case 'cause_feeling_unwell':
             return (data.Medication.flow.cause_feeling_unwell === 'Yes')
         case 'no_medication_intent_not_unwell':
@@ -147,10 +148,59 @@ export function getIf(if_name, data, setting) {
         case 'no_agree':
             return (data.Follow.flow.agree !== 'Yes')
         case 'need_follow':
-            return (veryUrgent(data) === true || urgent(data) === true || moderate(data) === true || (setting.Follow.visit !== 'Yes' && data.Follow.flow.agree_final !== 'Skip'))
+            return (urgent4(data) !== '' || urgent3(data) !== '' || urgent2(data) !== '' || (setting.Follow.visit !== 'Yes' && data.Follow.flow.agree_final !== 'Skip'))
         case 'need_no_follow':
-            return ((veryUrgent(data) === false && urgent(data) === false && moderate(data) === false) && (setting.Follow.visit === 'Yes' || data.Follow.flow.agree_final === 'Skip'))
+            return ((urgent4(data) === '' && urgent3(data) === '' && urgent2(data) === '') && (setting.Follow.visit === 'Yes' || data.Follow.flow.agree_final === 'Skip'))
+        case 'NCD':
+            return (data.Basic.Asthma === 'Yes' || data.Basic.diabetes === 'Yes' || data.Basic.hypertension === 'Yes')
+        case 'NotAsked_NCD001':
+            return (data.NCD_General.condition === undefined || data.NCD_General.condition === null);
+        case 'visit_hp':
+            return (setting.NCD.visit_hp === 'Yes')
+        case 'HT_BP_3':
+            return (HTBPcategory(data) === 3)
+        case 'HT_BP_2':
+            return (HTBPcategory(data) === 2)
+        case 'frequent_urination':
+            return (data.Diabetes.flow.frequent_urination === 'Yes')
+        case 'water_lostweight':
+            return (data.Diabetes.flow.frequent_urination !== 'Yes' && (data.Diabetes.flow.drink_water === 'Yes' || data.Diabetes.flow.weak_tired === 'Yes' || data.Diabetes.flow.lost_weight === 'Yes'))
+        case 'frequent_urination':
+            return (data.Diabetes.flow.increased_thirst === 'Yes' && (data.Diabetes.flow.frequent_urination !== 'Yes' && data.Diabetes.flow.drink_water !== 'Yes' && data.Diabetes.flow.weak_tired !== 'Yes' && data.Diabetes.flow.lost_weight !== 'Yes'))
+        // medication
+        case 'Not_Good':
+            return ((urgent4(data) !== '' || urgent3(data) !== '' || urgent2(data) !== ''))
+        case 'have_medication_everyday':
+            return (data.Medication.flow.have_medication === 'I had it everyday.')
+        case 'dont_have_medication':
+            return ((data.Medication.flow.have_medication === 'Sometimes I failed to have it.') || (data.Medication.flow.have_medication === 'I did not have it.'))
+        case 'not_directed_have_medication':
+            return (data.Medication.flow.have_medication === 'I had not been directed to take a medicine.')
+        case 'no_medication_intent':
+            return (data.Medication.flow.reason_no_medication === 'Yes. (I intentionally did not take the medicine.)')
+        case 'no_medication_forget':
+            return (data.Medication.flow.reason_no_medication === 'No. (I simply forgot to take the medicine.)')
+        case 'no_medication_over':
+            return (data.Medication.flow.reason_no_medication === 'The medication has been taken completely)')
+        case 'no_medication_no_forget':
+            return ((data.Medication.flow.reason_no_medication === 'Yes. (I intentionally did not take the medicine.)') || (data.Medication.flow.reason_no_medication === 'The medication has been taken completely)'))
+        case 'no_medication_no_unwell':
+            return (data.Medication.flow.cause_feeling_unwell === 'No')
     }
+}
+
+function HTBPcategory(data) {
+    let Scategory = 1;
+    let Dcategory = 1;
+    if (data.medical_basic.SBP !== undefined || data.medical_basic.SBP !== null) {
+        if (data.medical_basic.SBP > 180) { return 3; }
+        if (data.medical_basic.SBP > 140) { Scategory = 2; }
+    }
+    if (data.medical_basic.DBP !== undefined || data.medical_basic.DBP !== null) {
+        if (data.medical_basic.DBP >= 120) { return 3; }
+        if (data.medical_basic.DBP >= 90) { Dcategory = 2; }
+    }
+    return Math.max(Scategory, Dcategory);
 }
 
 function BPcategory(data) {
